@@ -1,0 +1,46 @@
+﻿@using Diary.Models
+@model Diary.Models.Post
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+
+    <div class="col-md-8">
+        <p class="pull-right"><span class="glyphicon glyphicon-time"></span> Posted on @string.Format("{0:MMMM dd, yyyy}", Model.PostDate)</p>
+        <h2>
+            @Model.Heading
+        </h2>
+        <p>
+            @foreach (Category category in Model.Categories)
+            {
+                @Html.ActionLink(category.Name, "Index", new { category = category.Name }, new { @class = "label label-default" }) @:
+                }
+        </p>
+        @*<p class="lead">
+                by <a href="index.php">Start Bootstrap</a>
+            </p>*@
+        @*<hr>
+            <img class="img-responsive" src="http://placehold.it/900x300" alt="">*@
+        <hr>
+        @if (!string.IsNullOrEmpty(Model.Body))
+        {
+            <p>@Html.Raw(Model.Body.Replace(System.Environment.NewLine, "<br />"))</p>
+        }
+        @*<a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>*@
+        <hr>
+    </div>
+
+    <div class="col-md-4">
+        <div class="well">
+            <h4>Actions</h4>
+            <div>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) <br />
+                @Html.ActionLink("Delete", "Delete", new { id = Model.ID }) <br />
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        </div>
+
+    </div>
+</div>

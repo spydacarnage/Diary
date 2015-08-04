@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Diary.Models.Post>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PostDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Heading)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Body)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Heading)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Body) <br />
+                @foreach (var category in item.Categories)
+                {
+                    @category.Name @:
+            }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<hr />
+
+<h3>Category List</h3>
+
+@foreach (var category in ViewBag.Categories)
+{
+    @category.Name <br />
+}
+
+<h3>Upcoming Events</h3>
+
+@foreach (var post in ViewBag.Events)
+{
+    @post.EventDate.ToString("MMM dd, yyyy")
+    @:-
+    @post.Heading<br />
+}

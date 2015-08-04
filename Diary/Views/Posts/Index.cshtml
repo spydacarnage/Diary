@@ -1,0 +1,155 @@
+﻿@using Diary.Models
+@model IEnumerable<Diary.Models.Post>
+@{
+    //Layout = null;
+}
+<div class="row">
+
+    <!-- Blog Entries Column -->
+    <div class="col-md-8">
+
+        <h1 class="page-header">
+            Diary - @ViewBag.Category
+            @if (ViewBag.Search != null)
+            {
+                var href = "/Posts?category=" + ViewBag.Category;
+                <br /><small><a href="@href"><span class="glyphicon glyphicon-remove"></span></a> Search for: @ViewBag.Search</small>
+            }
+        </h1>
+
+
+        @if (Model.Count() == 0) 
+        {
+            <h2>No posts to display</h2>
+        }
+        @foreach (Post post in Model)
+        {
+            <p class="pull-right"><span class="glyphicon glyphicon-time"></span> Posted on @string.Format("{0:MMMM dd, yyyy}", post.PostDate)</p>
+            <h2>
+                @Html.ActionLink(post.Heading, "Details", new { id = post.ID })
+            </h2>
+            <p>
+                @foreach (Category category in post.Categories)
+                {
+                    @Html.ActionLink(category.Name, "Index", new { category = category.Name }, new { @class = "label label-default" }) @:
+                }
+            </p>
+            @*<p class="lead">
+                by <a href="index.php">Start Bootstrap</a>
+            </p>*@
+            @*<hr>
+            <img class="img-responsive" src="http://placehold.it/900x300" alt="">*@
+            <hr>
+            if (!string.IsNullOrEmpty(post.Body))
+            {
+                <p>@Html.Raw(post.Body.Replace(System.Environment.NewLine, "<br />"))</p>
+            }
+            @*<a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>*@
+            <hr>
+        }
+        
+        <!-- Pager -->
+        <ul class="pager">
+            @if (ViewBag.Prev > 0)
+            { 
+                <li class="previous">
+                    @Html.ActionLink("← Newer", "Index", new { page = ViewBag.Prev, category = ViewBag.Category })
+                </li>
+            }
+            @if (ViewBag.Next > 0)
+            { 
+                <li class="next">
+                    @Html.ActionLink("Older →", "Index", new { page = ViewBag.Next, category = ViewBag.Category } )
+                </li>
+            }
+        </ul>
+
+    </div>
+
+    <!-- Blog Sidebar Widgets Column -->
+    <div class="col-md-4">
+
+        <!-- Blog Search Well -->
+        @using (Html.BeginForm("Index", "Posts", FormMethod.Get))
+        {
+            <input type="hidden" name="category" value="@ViewBag.Category" />
+            <div class="well">
+                <h4>Blog Search</h4>
+                <div class="input-group">
+                    <input name="search" type="text" class="form-control" placeholder="In: @ViewBag.Category">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
+                <!-- /.input-group -->
+            </div>
+        }
+
+        <!-- Blog Categories Well -->
+        <div class="well">
+            <span class="pull-right">
+                @Html.ActionLink("Edit", "Index", "Categories")
+            </span>
+            <h4>Blog Categories</h4>
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="list-unstyled">
+                        <li>
+                            @Html.ActionLink("All", "Index", null, new { @class = "btn btn-default col-md-12" })
+                        </li>
+                        @{
+                            int half = (ViewBag.Categories.Count / 2) + (ViewBag.Categories.Count % 2);
+                            for (int i = 0; i < half; i++)
+                            {
+                                <li>
+                                    @Html.ActionLink((string)ViewBag.Categories[i].Name, "Index", new { category = ViewBag.Categories[i].Name }, new { @class = "btn btn-default col-md-12" })
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <!-- /.col-lg-6 -->
+                <div class="col-lg-6">
+                    <ul class="list-unstyled">
+                        <li>
+                            <div class="btn btn-default" style="visibility: hidden">&nbsp;</div>
+                        </li>
+                        @for (int i = half; i < ViewBag.Categories.Count; i++)
+                        {
+                            <li>
+                                @Html.ActionLink((string)ViewBag.Categories[i].Name, "Index", new { category = ViewBag.Categories[i].Name }, new { @class = "btn btn-default col-md-12" })
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <!-- /.col-lg-6 -->
+            </div>
+
+            <!-- /.row -->
+        </div>
+
+        <!-- Side Widget Well -->
+        <div class="well">
+            <h4>Upcoming Events</h4>
+            @foreach (Post post in ViewBag.Events)
+            {
+                @post.EventDate.ToString("MMM dd, yyyy")
+                @:-
+                if (post.InCategory("Birthday"))
+                {
+                    @Html.Raw(string.Format("Birthday - {0} ({1})", post.Heading, (post.EventDate.Year - post.PostDate.Year)));
+                }
+                else
+                {
+                    @Html.ActionLink(post.Heading, "Details", new { id = post.ID })
+                }
+                <br />
+            }
+        </div>
+
+    </div>
+
+</div>
+<!-- /.row -->
