@@ -40,7 +40,7 @@ namespace Diary.Controllers
             }
             else
             {
-                posts = posts.Where(p => p.Categories.Any(t => t.Name != "Birthday"));
+                posts = posts.Where(p => p.Categories.All(t => t.Name != "Birthday"));
             }
 
             if (search != "")
