@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Diary.Models;
+using Newtonsoft.Json;
 
 namespace Diary.Controllers
 {
@@ -175,6 +176,73 @@ namespace Diary.Controllers
             db.Posts.Remove(post);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        private class JsonPost
+        {
+            public DateTime PostDate { get; set; }
+            public string Heading { get; set; }
+            public string Body { get; set; }
+            private List<int> _Categories = new List<int>();
+            public int[] Categories
+            {
+                get
+                { return _Categories.ToArray(); }
+            }
+            public JsonPost() { }
+            public JsonPost(Post post)
+            {
+                PostDate = post.PostDate;
+                Heading = post.Heading;
+                Body = post.Body;
+                foreach (Category c in post.Categories)
+                {
+                    _Categories.Add(c.ID);
+                }
+            }
+        }
+        public ActionResult Export()
+        {
+            var posts = db.Posts.Include(p => p.Categories);
+            List<JsonPost> jPosts = new List<JsonPost>();
+            
+            foreach(Post p in posts)
+            {
+                jPosts.Add(new JsonPost(p));
+            }
+
+            string result = JsonConvert.SerializeObject(jPosts);
+
+            return Json(jPosts, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public void Import(string json)
+        {
+            List<JsonPost> jPosts = JsonConvert.DeserializeObject<List<JsonPost>>(json);
+
+            foreach (JsonPost jPost in jPosts)
+            {
+                Post post = new Post { PostDate = jPost.PostDate, Heading = jPost.Heading, Body = jPost.Body };
+                if (jPost.Categories.Count() > 0)
+                {
+                    post.Categories = new List<Category>();
+                    foreach (var category in jPost.Categories)
+                    {
+                        var categoryToAdd = db.Categories.Find(category);
+                        post.Categories.Add(categoryToAdd);
+                    }
+                }
+                db.Posts.Add(post);
+            }
+            db.SaveChanges();
+
+            RedirectToAction("Index");
         }
 
         private void PopulateAssignedCategories(Post post)

@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Import";
+}
+
+<h2>Import</h2>
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <textarea name="json" id="json" placeholder="Enter Json here..." rows="20" cols="120"></textarea>
+        <br />
+        <button type="submit" value="Submit">Submit</button>
+    }
+</div>
