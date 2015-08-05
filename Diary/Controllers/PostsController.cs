@@ -31,7 +31,7 @@ namespace Diary.Controllers
                     .OrderBy(e => e.EventDate)
                     .ToList());
 
-            ViewBag.Events = allEvents.Take(3);
+            ViewBag.Events = allEvents.Take(3).ToList();
 
             var posts = db.Posts.OrderByDescending(p => p.PostDate).Include(p => p.Categories);
             if (category.ToUpper() != "ALL")
@@ -59,7 +59,7 @@ namespace Diary.Controllers
             ViewBag.Next = (posts.Count() > 10 ? page + 1 : 0);
 
 
-            return View(posts.Take(10));
+            return View(posts.Take(10).ToList());
         }
 
         // GET: Posts/List

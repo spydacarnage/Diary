@@ -12,7 +12,7 @@
             Diary - @ViewBag.Category
             @if (ViewBag.Search != null)
             {
-                var href = "/Posts?category=" + ViewBag.Category;
+                var href = "/?category=" + ViewBag.Category;
                 <br /><small><a href="@href"><span class="glyphicon glyphicon-remove"></span></a> Search for: @ViewBag.Search</small>
             }
         </h1>
