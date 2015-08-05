@@ -9,9 +9,9 @@ namespace Diary.Controllers
         private static RouteValueDictionary ReturnToRoute = null;
 
         private static readonly object AUTH = true;
-        public static void CheckAuth(Controller controller, [CallerMemberName] string action = "")
+        public static void CheckAuth(Controller controller)
         {
-            if (controller.TempData.Peek("IsAuthorised") != AUTH)
+            if (controller.Session["IsAuthorised"] != AUTH)
             {
                 ReturnToRoute = controller.RouteData.Values;
                 
@@ -35,7 +35,7 @@ namespace Diary.Controllers
                 return View();
             }
 
-            TempData["IsAuthorised"] = AUTH;
+            Session["IsAuthorised"] = AUTH;
             return RedirectToRoute(ReturnToRoute);
         }
     }
