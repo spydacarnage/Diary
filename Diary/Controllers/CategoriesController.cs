@@ -17,12 +17,16 @@ namespace Diary.Controllers
         // GET: Categories
         public ActionResult Index()
         {
+            SecurityController.CheckAuth(this);
+
             return View(db.Categories.ToList());
         }
 
         // GET: Categories/Details/5
         public ActionResult Details(int? id)
         {
+            SecurityController.CheckAuth(this);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -38,6 +42,8 @@ namespace Diary.Controllers
         // GET: Categories/Create
         public ActionResult Create()
         {
+            SecurityController.CheckAuth(this);
+
             return View();
         }
 
@@ -48,6 +54,8 @@ namespace Diary.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Name")] Category category)
         {
+            SecurityController.CheckAuth(this);
+
             if (ModelState.IsValid)
             {
                 db.Categories.Add(category);
@@ -61,6 +69,8 @@ namespace Diary.Controllers
         // GET: Categories/Edit/5
         public ActionResult Edit(int? id)
         {
+            SecurityController.CheckAuth(this);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -80,6 +90,8 @@ namespace Diary.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Name")] Category category)
         {
+            SecurityController.CheckAuth(this);
+
             if (ModelState.IsValid)
             {
                 db.Entry(category).State = EntityState.Modified;
@@ -92,6 +104,8 @@ namespace Diary.Controllers
         // GET: Categories/Delete/5
         public ActionResult Delete(int? id)
         {
+            SecurityController.CheckAuth(this);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -109,6 +123,8 @@ namespace Diary.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            SecurityController.CheckAuth(this);
+
             Category category = db.Categories.Find(id);
             db.Categories.Remove(category);
             db.SaveChanges();

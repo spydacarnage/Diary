@@ -1,0 +1,21 @@
+﻿
+<h2>Login</h2>
+
+<div class="row">
+    @if (ViewBag.Error == "true")
+    {
+        <div class="alert alert-danger">
+            Invalid login
+        </div>
+    }
+    @using (Html.BeginForm())
+    {
+        <dl>
+            <dt class="col-md-5"><input type="password" class="form-control" id="password" name="password" placeholder="password" /></dt>
+        </dl>
+        <div class="col-md-7">&nbsp;</div>
+        <div class="col-md-12">
+            <button type="submit">Submit</button>
+        </div>
+    }
+</div>

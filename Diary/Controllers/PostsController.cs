@@ -18,6 +18,8 @@ namespace Diary.Controllers
         // GET: Posts
         public ActionResult Index(string category = "All", int page = 1, string search = "")
         {
+            SecurityController.CheckAuth(this);
+
             ViewBag.Categories = db.Categories.OrderBy(c => c.Name).ToList();
             ViewBag.Category = category;
 
@@ -65,12 +67,16 @@ namespace Diary.Controllers
         // GET: Posts/List
         public ActionResult List()
         {
+            SecurityController.CheckAuth(this);
+
             return View(db.Posts.ToList());
         }
 
         // GET: Posts/Details/5
         public ActionResult Details(int? id)
         {
+            SecurityController.CheckAuth(this);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -86,6 +92,8 @@ namespace Diary.Controllers
         // GET: Posts/Create
         public ActionResult Create()
         {
+            SecurityController.CheckAuth(this);
+
             var post = new Post() { PostDate = DateTime.Today, Categories = new List<Category>() };
             PopulateAssignedCategories(post);
             return View(post);
@@ -98,6 +106,8 @@ namespace Diary.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,PostDate,Heading,Body")] Post post, string[] selectedCategories)
         {
+            SecurityController.CheckAuth(this);
+
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrWhiteSpace(post.Heading))
@@ -123,6 +133,8 @@ namespace Diary.Controllers
         // GET: Posts/Edit/5
         public ActionResult Edit(int? id)
         {
+            SecurityController.CheckAuth(this);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -143,6 +155,8 @@ namespace Diary.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,PostDate,Heading,Body")] Post post, string[] selectedCategories)
         {
+            SecurityController.CheckAuth(this);
+
             if (ModelState.IsValid)
             {
                 var postToUpdate = db.Posts.Include(p => p.Categories).Where(p => p.ID == post.ID).Single();
@@ -161,6 +175,8 @@ namespace Diary.Controllers
         // GET: Posts/Delete/5
         public ActionResult Delete(int? id)
         {
+            SecurityController.CheckAuth(this);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -178,6 +194,8 @@ namespace Diary.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            SecurityController.CheckAuth(this);
+
             Post post = db.Posts.Find(id);
             db.Posts.Remove(post);
             db.SaveChanges();
@@ -189,11 +207,19 @@ namespace Diary.Controllers
             public DateTime PostDate { get; set; }
             public string Heading { get; set; }
             public string Body { get; set; }
-            private List<int> _Categories = new List<int>();
-            public int[] Categories
+            private List<string> _Categories = new List<string>();
+            public string[] Categories
             {
                 get
-                { return _Categories.ToArray(); }
+                {
+                    return _Categories.ToArray();
+                }
+                set
+                {
+                    _Categories = new List<string>();
+                    foreach (string s in value)
+                        _Categories.Add(s);
+                }
             }
             public JsonPost() { }
             public JsonPost(Post post)
@@ -203,12 +229,14 @@ namespace Diary.Controllers
                 Body = post.Body;
                 foreach (Category c in post.Categories)
                 {
-                    _Categories.Add(c.ID);
+                    _Categories.Add(c.Name);
                 }
             }
         }
         public ActionResult Export()
         {
+            SecurityController.CheckAuth(this);
+
             var posts = db.Posts.Include(p => p.Categories);
             List<JsonPost> jPosts = new List<JsonPost>();
             
@@ -224,12 +252,16 @@ namespace Diary.Controllers
 
         public ActionResult Import()
         {
+            SecurityController.CheckAuth(this);
+
             return View();
         }
 
         [HttpPost]
         public void Import(string json)
         {
+            SecurityController.CheckAuth(this);
+
             List<JsonPost> jPosts = JsonConvert.DeserializeObject<List<JsonPost>>(json);
 
             foreach (JsonPost jPost in jPosts)
@@ -240,7 +272,7 @@ namespace Diary.Controllers
                     post.Categories = new List<Category>();
                     foreach (var category in jPost.Categories)
                     {
-                        var categoryToAdd = db.Categories.Find(category);
+                        Category categoryToAdd = db.Categories.Single(c => c.Name == category);
                         post.Categories.Add(categoryToAdd);
                     }
                 }

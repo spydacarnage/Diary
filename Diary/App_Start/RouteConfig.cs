@@ -20,6 +20,12 @@ namespace Diary
             );
 
             routes.MapRoute(
+                name: "Security",
+                url: "Security/{action}",
+                defaults: new { controller = "Security", action = "Login" }
+            );
+
+            routes.MapRoute(
                 name: "BlogPosts",
                 url: "{action}/{id}",
                 defaults: new { controller = "Posts", action = "Index", id = UrlParameter.Optional }
