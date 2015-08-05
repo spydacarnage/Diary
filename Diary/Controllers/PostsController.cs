@@ -62,6 +62,12 @@ namespace Diary.Controllers
             return View(posts.Take(10));
         }
 
+        // GET: Posts/List
+        public ActionResult List()
+        {
+            return View(db.Posts.ToList());
+        }
+
         // GET: Posts/Details/5
         public ActionResult Details(int? id)
         {
