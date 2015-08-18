@@ -24,7 +24,7 @@ namespace Diary.Controllers
             ViewBag.Category = category;
 
             var events = db.Posts
-                .Where(p => p.Categories.Any(c => c.Name == "Event" || c.Name == "Birthday")).AsEnumerable();
+                .Where(p => p.Categories.Any(c => (c.Name == "Event" || c.Name == "Birthday") || (c.Name == "Reminder" && p.PostDate > DateTime.Today) )).AsEnumerable();
 
             List<Post> allEvents = new List<Post>();
             allEvents.AddRange(
@@ -42,7 +42,7 @@ namespace Diary.Controllers
             }
             else
             {
-                posts = posts.Where(p => p.Categories.All(t => t.Name != "Birthday"));
+                posts = posts.Where(p => p.Categories.All(t => t.Name != "Birthday" && t.Name != "Reminder"));
             }
 
             if (search != "")
