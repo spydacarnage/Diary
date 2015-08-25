@@ -14,6 +14,7 @@ namespace Diary.Models
 
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<HashTag> HashTags { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

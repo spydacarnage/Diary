@@ -42,7 +42,7 @@
             <hr>
             if (!string.IsNullOrEmpty(post.Body))
             {
-                <p>@Html.Raw(post.Body.Replace(System.Environment.NewLine, "<br />"))</p>
+                <p>@Html.Raw(post.HtmlView)</p>
             }
             @*<a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>*@
             <hr>
@@ -96,6 +96,9 @@
             <div class="row">
                 <div class="col-lg-6">
                     <ul class="list-unstyled">
+                        <li>
+                            @Html.ActionLink("All", "Index", null, new { @class = "btn btn-default col-md-12", style = "margin-bottom: 10px" })
+                        </li>
                         @{
                             int half = (ViewBag.Categories.Count / 2) + (ViewBag.Categories.Count % 2);
                             for (int i = 0; i < half; i++)
@@ -105,14 +108,14 @@
                                 </li>
                             }
                         }
-                        <li>
-                            @Html.ActionLink("All", "Index", null, new { @class = "btn btn-default col-md-12", style = "margin-top: 10px" })
-                        </li>
                     </ul>
                 </div>
                 <!-- /.col-lg-6 -->
                 <div class="col-lg-6">
                     <ul class="list-unstyled">
+                        <li>
+                            @Html.ActionLink("Hashtags", "Index", "Hashtags", null, new { @class = "btn btn-default col-md-12", style = "margin-bottom: 10px" })
+                        </li>
                         @for (int i = half; i < ViewBag.Categories.Count; i++)
                         {
                             <li>

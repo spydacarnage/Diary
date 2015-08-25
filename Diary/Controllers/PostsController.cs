@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using Diary.Models;
@@ -16,7 +17,7 @@ namespace Diary.Controllers
         private BlogContext db = new BlogContext();
 
         // GET: Posts
-        public ActionResult Index(string category = "All", int page = 1, string search = "")
+        public ActionResult Index(string category = "All", string hashtag = "", int page = 1, string search = "")
         {
             SecurityController.CheckAuth(this);
 
@@ -36,13 +37,21 @@ namespace Diary.Controllers
             ViewBag.Events = allEvents.Take(3).ToList();
 
             var posts = db.Posts.OrderByDescending(p => p.PostDate).Include(p => p.Categories);
-            if (category.ToUpper() != "ALL")
+            if (hashtag != "")
             {
-                posts = posts.Where(p => p.Categories.Any(t => t.Name == category));
+                ViewBag.Category = hashtag = "#" + hashtag.ToLower();
+                posts = posts.Where(p => p.HashTags.Any(h => h.Name == hashtag));
             }
             else
             {
-                posts = posts.Where(p => p.Categories.All(t => t.Name != "Birthday" && t.Name != "Reminder"));
+                if (category.ToUpper() != "ALL")
+                {
+                    posts = posts.Where(p => p.Categories.Any(c => c.Name == category));
+                }
+                else
+                {
+                    posts = posts.Where(p => p.Categories.All(c => c.Name != "Birthday" && c.Name != "Reminder"));
+                }
             }
 
             if (search != "")
@@ -122,6 +131,9 @@ namespace Diary.Controllers
                         post.Categories.Add(categoryToAdd);
                     }
                 }
+
+                PopulateHashTags(post);
+
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -145,6 +157,7 @@ namespace Diary.Controllers
                 return HttpNotFound();
             }
             PopulateAssignedCategories(post);
+            //PopulateHashTags(post);
             return View(post);
         }
 
@@ -165,6 +178,7 @@ namespace Diary.Controllers
                 postToUpdate.Body = post.Body;
 
                 UpdateAssignedCategories(selectedCategories, postToUpdate);
+                PopulateHashTags(postToUpdate);
 
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -299,6 +313,58 @@ namespace Diary.Controllers
                 });
             }
             ViewBag.Categories = viewModel;
+        }
+
+        private void PopulateHashTags(Post post)
+        {
+            var mHash = Regex.Matches(post.Body + " ", "(#.*?) ");
+            if (mHash.Count == 0)
+            {
+                post.HashTags = new List<HashTag>();
+                return;
+            }
+
+            var newTags = new HashSet<string>();
+            foreach (Match m in mHash)
+                newTags.Add(m.Groups[1].Value.ToLower());
+
+            HashSet<string> postTags;
+            if (post.HashTags == null)
+            {
+                postTags = new HashSet<string>();
+                post.HashTags = new List<HashTag>();
+            }
+            else
+            {
+                postTags = new HashSet<string>(post.HashTags.Select(h => h.Name.ToLower()));
+            }
+
+            if (newTags.SetEquals(postTags))
+                return;
+
+            foreach(string tag in postTags)
+            {
+                if (!newTags.Contains(tag))
+                {
+                    post.HashTags.Remove(db.HashTags.Single(h => h.Name == tag));
+                }
+            }
+
+            foreach(string tag in newTags)
+            {
+                if (!postTags.Contains(tag))
+                {
+                    var dbHash = db.HashTags.SingleOrDefault(h => h.Name == tag);
+                    if (dbHash == null)
+                    {
+                        post.HashTags.Add(new HashTag() { Name = tag });
+                    }
+                    else
+                    {
+                        post.HashTags.Add(dbHash);
+                    }
+                }
+            }
         }
 
         private void UpdateAssignedCategories(string[] selectedCategories, Post postToUpdate)

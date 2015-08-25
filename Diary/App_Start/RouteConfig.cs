@@ -14,6 +14,12 @@ namespace Diary
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "HashTags",
+                url: "Hashtags",
+                defaults: new { controller = "HashTags", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Categories",
                 url: "Categories/{action}/{id}",
                 defaults: new { controller = "Categories", action = "Index", id = UrlParameter.Optional }

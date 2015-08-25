@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Diary.Controllers.HashTagsController.HashTagCount>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Hashtags</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Hashtag
+        </th>
+        <th>
+            Count
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.Name, "Index", "Posts", new { hashtag = @item.Name.Remove(0,1) }, new { @class = "hashtag" })
+        </td>
+        <td>
+            @item.Count
+        </td>
+    </tr>
+}
+
+</table>

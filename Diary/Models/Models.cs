@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Diary.Models
@@ -23,6 +24,7 @@ namespace Diary.Models
 
         //Navigation
         public virtual ICollection<Category> Categories { get; set; }
+        public virtual ICollection<HashTag> HashTags { get; set; }
 
         //Display
         [NotMapped]
@@ -54,6 +56,16 @@ namespace Diary.Models
 
             return false;
         }
+
+        public string HtmlView
+        {
+            get
+            {
+                string result = Body.Replace(System.Environment.NewLine, "<br />");
+                result = Regex.Replace(result, "#(\\w+)", "<a href=\"/?hashtag=$1\" class=\"hashtag\">#$1</a>");
+                return result;
+            }
+        }
     }
 
     public class Category
@@ -61,6 +73,17 @@ namespace Diary.Models
         public int ID { get; set; }
 
         [StringLength(50)]
+        public string Name { get; set; }
+
+        //Navigation
+        public virtual ICollection<Post> Posts { get; set; }
+    }
+
+    public class HashTag
+    {
+        public int ID { get; set; }
+
+        [StringLength(200)]
         public string Name { get; set; }
 
         //Navigation

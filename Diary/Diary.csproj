@@ -130,6 +130,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
+    <Compile Include="Controllers\HashTagsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
@@ -139,6 +140,10 @@
     <Compile Include="Migrations\201507310936356_initialDb.cs" />
     <Compile Include="Migrations\201507310936356_initialDb.Designer.cs">
       <DependentUpon>201507310936356_initialDb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508250848114_addHashTags.cs" />
+    <Compile Include="Migrations\201508250848114_addHashTags.Designer.cs">
+      <DependentUpon>201508250848114_addHashTags.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Models.cs" />
@@ -209,6 +214,7 @@
     <Content Include="Views\Posts\Import.cshtml" />
     <Content Include="Views\Posts\List.cshtml" />
     <Content Include="Views\Security\Login.cshtml" />
+    <Content Include="Views\HashTags\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -219,6 +225,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201507310936356_initialDb.resx">
       <DependentUpon>201507310936356_initialDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508250848114_addHashTags.resx">
+      <DependentUpon>201508250848114_addHashTags.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
