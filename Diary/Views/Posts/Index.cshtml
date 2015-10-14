@@ -24,7 +24,7 @@
         }
         @foreach (Post post in Model)
         {
-            <p class="pull-right"><span class="glyphicon glyphicon-time"></span> Posted on @string.Format("{0:MMMM dd, yyyy}", post.PostDate)</p>
+            <p class="pull-right"><a href="/Edit/@post.ID"><span class="glyphicon glyphicon-time"></span></a> Posted on @string.Format("{0:dddd dd MMMM, yyyy}", post.PostDate)</p>
             <h2>
                 @Html.ActionLink(post.Heading, "Details", new { id = post.ID })
             </h2>

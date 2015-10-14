@@ -21,11 +21,19 @@ namespace Diary.Controllers
         }
 
         // GET: HashTags
-        public ActionResult Index()
+        public ActionResult Index(bool popular = false)
         {
             var tags = db.HashTags
-                .Select(h => new HashTagCount { Name = h.Name, Count = h.Posts.Count })
-                .OrderBy(c => c.Count);
+                .Select(h => new HashTagCount { Name = h.Name, Count = h.Posts.Count });
+
+            if (popular)
+            {
+                tags = tags.OrderByDescending(c => c.Count);
+            }
+            else
+            {
+                tags = tags.OrderBy(c => c.Name);
+            }
 
             return View(tags);
         }

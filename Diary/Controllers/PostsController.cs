@@ -317,7 +317,7 @@ namespace Diary.Controllers
 
         private void PopulateHashTags(Post post)
         {
-            var mHash = Regex.Matches(post.Body + " ", "(#.*?) ");
+            var mHash = Regex.Matches(post.Body + " ", @"(#.*?)\W");
             if (mHash.Count == 0)
             {
                 post.HashTags = new List<HashTag>();

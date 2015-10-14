@@ -16,7 +16,13 @@ namespace Diary
             routes.MapRoute(
                 name: "HashTags",
                 url: "Hashtags",
-                defaults: new { controller = "HashTags", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "HashTags", action = "Index" }
+            );
+
+            routes.MapRoute(
+                name: "HashTagsPopular",
+                url: "Hashtags/Popular",
+                defaults: new { controller = "HashTags", action = "Index", popular = true }
             );
 
             routes.MapRoute(
