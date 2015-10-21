@@ -63,6 +63,9 @@ namespace Diary.Models
             {
                 string result = Body.Replace(System.Environment.NewLine, "<br />");
                 result = Regex.Replace(result, "#(\\w+)", "<a href=\"/?hashtag=$1\" class=\"hashtag\">#$1</a>");
+                result = Regex.Replace(result, "__(.+?)__", "<u>$1</u>");
+                result = Regex.Replace(result, "_(.+?)_", "<i>$1</i>");
+                result = Regex.Replace(result, "\\*(.+?)\\*", "<b>$1</b>");
                 return result;
             }
         }

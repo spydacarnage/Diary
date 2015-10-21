@@ -12,7 +12,16 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>My Diary</title>
+    <title>
+        @if (ViewBag.PageTitle == null)
+        {
+            @:My Diary
+        }
+        else
+        {
+            @ViewBag.PageTitle @: - My Diary
+        }
+    </title>
 
     <!-- Bootstrap Core CSS -->
     <link href="~/Content/bootstrap.min.css" rel="stylesheet">
