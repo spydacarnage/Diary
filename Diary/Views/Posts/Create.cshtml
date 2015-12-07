@@ -4,15 +4,14 @@
     ViewBag.PageTitle = "New Post";
 }
 
-<h2>Create</h2>
+<h2>New Post</h2>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Post</h4>
-        <hr />
+    <hr />
+
+    <div class="form-horizontal" style="width:75%; float:left">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.PostDate, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -33,35 +32,37 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Body, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Body, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Body, new { htmlAttributes = new { @class = "form-control", style = "height: 450px" } })
                 @Html.ValidationMessageFor(model => model.Body, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        <div class="form-group">
+    </div>
+    <div>
+        <div>
             @Html.LabelFor(model => model.Categories, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @{ 
+            <div class="col-md-2">
+                @{
                     List<Diary.Controllers.AssignedCategoryData> categories = ViewBag.Categories;
-                    foreach(var category in categories)
+                    foreach (var category in categories)
                     {
-                        <input type="checkbox" name="selectedCategories" value="@category.ID" @Html.Raw(category.Assigned ? "checked=\"checked\"" : "")) />
+                        <input type="checkbox" name="selectedCategories" value="@category.ID" @Html.Raw(category.Assigned ? "checked=\"checked\"" : "") ) />
                         @category.Name<br />
                     }
                 }
             </div>
         </div>
-
+    </div>
+    <div style="float:unset">
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
-}
+                    }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+<div style="clear: left">
+    <br />@Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

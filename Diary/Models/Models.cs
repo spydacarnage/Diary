@@ -66,6 +66,19 @@ namespace Diary.Models
                 result = Regex.Replace(result, "__(.+?)__", "<u>$1</u>");
                 result = Regex.Replace(result, "_(.+?)_", "<i>$1</i>");
                 result = Regex.Replace(result, "\\*(.+?)\\*", "<b>$1</b>");
+                result = Regex.Replace(result, "((http|https)://.+)[\\s]{0,1}", m =>
+                {
+                    string temp = m.Groups[1].Value;
+                    if (temp.EndsWith(".") || temp.EndsWith("!"))
+                    {
+                        return string.Format("<a href=\"{0}\" target=\"_new\">{0}</a>{1}", temp.Remove(temp.Length - 1), temp.Remove(0, temp.Length - 1));
+                    }
+                    else
+                    {
+                        return string.Format("<a href=\"{0}\" target=\"_new\">{0}</a>", temp);
+                    }
+                });
+
                 return result;
             }
         }
