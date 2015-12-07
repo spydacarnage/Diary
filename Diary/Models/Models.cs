@@ -66,7 +66,7 @@ namespace Diary.Models
                 result = Regex.Replace(result, "__(.+?)__", "<u>$1</u>");
                 result = Regex.Replace(result, "_(.+?)_", "<i>$1</i>");
                 result = Regex.Replace(result, "\\*(.+?)\\*", "<b>$1</b>");
-                result = Regex.Replace(result, "((http|https)://.+)[\\s]{0,1}", m =>
+                result = Regex.Replace(result + " ", "((http|https)://.+?)(<br />|\\s)", m =>
                 {
                     string temp = m.Groups[1].Value;
                     if (temp.EndsWith(".") || temp.EndsWith("!"))
