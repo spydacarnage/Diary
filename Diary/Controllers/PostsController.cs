@@ -30,7 +30,7 @@ namespace Diary.Controllers
             List<Post> allEvents = new List<Post>();
             allEvents.AddRange(
                 events
-                    .Where(e => e.EventDate > DateTime.Today && e.EventDate < DateTime.Today.AddMonths(3))
+                    .Where(e => e.EventDate >= DateTime.Today && e.EventDate < DateTime.Today.AddMonths(3))
                     .OrderBy(e => e.EventDate)
                     .ToList());
 
